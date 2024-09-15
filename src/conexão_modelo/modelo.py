@@ -18,7 +18,8 @@ from src.config.config import BUCKET, SUBPASTA_MODELO, MODEL_FILE_NAME
 
 def load_model():
     modelo_carregado = xgb.Booster()
-    modelo_carregado.load_model('src\projeto\projeto\modelos\hotel\xgboost\output\xgboost-2024-09-13-16-09-04-431\output\model\xgboost-model')
+    modelo_carregado.load_model('src/projeto/projeto/modelos/hotel/xgboost/output/xgboost-2024-09-13-16-09-04-431/output/model/xgboost-model')
+
 
 '''
 def load_model():
