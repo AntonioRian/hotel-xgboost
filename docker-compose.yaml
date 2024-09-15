@@ -6,7 +6,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
-    # environment:
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION}
     volumes:
       - .:/src
     command: ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
