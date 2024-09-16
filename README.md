@@ -51,10 +51,6 @@ Além disso, foi desenvolvida uma API em Python que carrega o modelo treinado ar
 ├── model/
 │    └── training/
 ├── src/
-│    ├── conexao_modelo/
-│    ├── config/
-│    └── projeto/
-│        └──projeto/
 │    └── main.py
 ├── Dockerfile
 ├── docker-compose.yaml
