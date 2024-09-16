@@ -1,85 +1,153 @@
-# Avaliação Sprints 4 e 5 - Programa de Bolsas Compass UOL e AWS - turma julho-a/2024
+# Hotel Reservations Classifier - AWS Machine Learning API
 
-Avaliação das quarta e quinta sprints do programa de bolsas Compass UOL para formação em machine learning para AWS.
+![_0b962214-baa7-4c7a-bdfc-cae9da277c00](https://github.com/user-attachments/assets/3a1ca14c-c5b3-4ef5-9c7e-1540f3da4b81)
 
-***
+## Tópicos
+* [Descrição do Projeto](#descricao-do-projeto)
+* [Retorno da API](#retorno-da-api)
+* [Estrutura de Pastas](#estrutura-de-pastas)
+* [Arquitetura AWS](#arquitetura-aws)
+* [Tecnologias Utilizadas](#tecnologias-utilizadas)
+* [Dificuldades Superadas](#dificuldades-superadas)
+* [Como Clonar](#como-clonar)
+* [Autores](#autores)
 
-## Execução
+---
 
-1 - Treinar o modelo utilizando SageMaker, a partir do dataset armazenado no AWS RDS, conforme instruções a seguir, e fazer o salvamento do modelo para o S3.
+<div id='descricao-do-projeto'/>
 
-2 - Criar um ambiente Docker no AWS para implementar a API descrita no próximo passo.
+## Descrição do Projeto
 
-3 - Desenvolver um serviço em python (API), utilizando algum framework http (Flask, FastApi...), que deve carregar o modelo treinado do S3 e expor um endpoint para realizar a inferência. O endpoint deve ser um POST com uma rota /api/v1/inference e receber um JSON no corpo da requisição seguindo o exemplo:
+Nossa equipe desenvolveu um modelo treinado utilizando SageMaker para classificar os dados do [Hotel Reservations Classification Dataset](https://www.kaggle.com/datasets/ahsan81/hotel-reservations-classification-dataset), a fim de categorizar as reservas de acordo com a faixa de preço por quarto. Para isso, foi criado um banco de dados AWS RDS em MySQL para armazenar as tabelas necessárias.
 
-```json
-{
-    "no_of_adults": 3,
-    "no_of_children": 3,
-    "type_of_meal_plan": "example"
-    ...
-}
+Além disso, foi desenvolvida uma API em Python que carrega o modelo treinado armazenado no Amazon S3 e expõe um endpoint para realizar a inferência. Esse endpoint recebe informações de uma reserva e retorna a previsão de classificação de preço da reserva.
+
+### Implementação
+
+1. **Criação de dataset no RDS MySQL**
+2. **Treinamento do modelo no SageMaker**
+3. **Armazenamento do modelo no S3**
+4. **Desenvolvimento da API**
+5. **Deploy da API em EC2 AWS com Docker**
+
+---
+
+<div id='retorno-da-api'/>
+
+# Retorno da API
+
+
+---
+
+<div id='estrutura-de-pastas'/>
+
+# Estrutura de Pastas
+
+```sh
+├── assets/
+├── data/
+│    ├── processed/
+│    └── raw/
+├── model/
+│    └── training/
+├── src/
+│    ├── conexao_modelo/
+│    ├── config/
+│    └── projeto/
+│        └──projeto/
+│    └── main.py
+├── Dockerfile
+├── docker-compose.yaml
+├── requirements.txt
+├── README.md
 ```
 
-A resposta deve seguir este formato:
+---
 
-```json
-{
-  "result": 1
-}
+<div id='arquitetura-aws'/>
+
+# Arquitetura AWS
+
+
+---
+
+<div id='tecnologias-utilizadas'/>
+
+# Tecnologias Utilizadas (com versao.)
+
+| ![AWS SageMaker](https://img.shields.io/badge/aws_sagemaker-006400.svg?style=for-the-badge&logo=amazon-aws&logoColor=white) | ![AWS RDS](https://img.shields.io/badge/aws_rds-527FFF.svg?style=for-the-badge&logo=amazon-aws&logoColor=white) | ![AWS S3](https://img.shields.io/badge/aws_s3-569A31.svg?style=for-the-badge&logo=amazon-aws&logoColor=white) |
+|:-----------------------------------:|:-----------------------------------:|:-----------------------------------:|
+| **Versão**: ...                     | **Versão**: MySQL 8.0.35            | **Versão**: ...                |
+
+| ![FastAPI](https://img.shields.io/badge/fastapi-009688.svg?style=for-the-badge&logo=fastapi&logoColor=white) | ![Docker](https://img.shields.io/badge/docker-2496ED.svg?style=for-the-badge&logo=docker&logoColor=white) | ![Python](https://img.shields.io/badge/python-3776AB.svg?style=for-the-badge&logo=python&logoColor=white) |
+|:--------------------------------:|:-------------------------------:|:-----------------------------:|
+| **Versão**: ...               | **Versão**: ...              | **Versão**: ...             |
+
+
+
+---
+
+<div id='dificuldades-superadas'/>
+
+# Dificuldades Superadas
+
+| **Problema** | **Solução** |
+|-----------|---------|
+| Alimentação do Banco | Encontramos dificuldades relacionadas à permissão ao tentar carregar arquivo .csv usando o comando `LOAD DATA INFILE`. Como alternativa, optamos por alimentar o banco de dados manualmente. |
+| ... | ... |
+| ... | ... |
+
+---
+
+<div id='como-clonar'/>
+
+# Como Clonar
+
+1. **Clone o repositorio.**
+   - No terminal, execute o comando abaixo para clonar a branch específica do projeto:
+```
+git clone --branch grupo-3 https://github.com/Compass-pb-aws-2024-JULHO-A/sprints-4-5-pb-aws-julho-a.git
 ```
 
-4 - Realizar o Deploy do serviço na AWS.
+---
 
-![Esquema mostrando a cloud aws com usuários acessando api gateway esta recebendo o modelo do bucket s3. Sagemaker ligado ao bucket para fornecer o modelo e ao RDS para ler e atualizar o dataset.](assets/sprint4-5.jpg)
+<div id='autores'>
 
-***
+# Autores
 
-## Construção do Modelo
-
-O Hotel Reservations Dataset (<https://www.kaggle.com/datasets/ahsan81/hotel-reservations-classification-dataset>) é uma base de dados que trata de informações sobre reservas em hotéis.
-
-Iremos utilizar esse dataset para classificar os dados por faixa de preços de acordo com as informações encontradas em suas colunas (usem o que vocês acharem que faz sentido para análise).
-
-**Queremos saber como cada reserva (cada linha do dataset) se encaixa em qual faixa de preço.** Para isso, a equipe **deve criar uma nova coluna** chamada **label_avg_price_per_room**, que servirá como label para nossa classificação. Essa nova coluna deverá conter número 1 quando a coluna *avg_price_per_room* tiver valor menor ou igual a 85, número 2 quando a coluna *avg_price_per_room* tiver valor maior que 85 e menor que 115 e o valor 3 se a coluna *avg_price_per_room* tiver valor maior ou igual a 115.
-
-Vocês devem então **excluir a coluna avg_price_per_room** e criar um modelo que consiga classificar os dados com base na nova coluna *label_avg_price_per_room*.
-
-Armazene o dataset original e alterado no AWS RDS. O modelo treinado deverá ser armazenado no S3.
-
-Será necessário explicar o porquê da escolha do modelo, como ele funciona. Também será avaliada a taxa de assertividade do modelo.
-
-![Fluxograma para ilustração da descrição do tratamento do modelo.](assets/dataset_schema.png)
-
-***
-
-## O que será avaliado
-
-- Projeto em produção na AWS;
-- Código Python utilizado no Sagemaker;
-- Código Python usado na infererência (API);
-- Código do Dockerfile e/ou docker-compose;
-- Sobre o modelo:
-  - Divisão dos dados para treino e teste;
-  - Taxa de assertividade aceitável (se o modelo está classificando corretamente);
-  - Entendimento da equipe sobre o modelo utilizado (saber explicar o que foi feito);
-  - Mostrar resposta do modelo para classificação;
-- Organização geral do código fonte:
-  - Estrutura de pastas;
-  - Divisão de responsabilidades em arquivos/pastas distintos;
-  - Otimização do código fonte (evitar duplicações de código);
-- Objetividade do README.md.
-
-***
-
-## Entrega
-
-- **O trabalho deve ser feito em grupos de três ou quatro pessoas**;
-  - **Evitar repetições de grupos de sprints anteriores**;
-- Criar uma branch no repositório com o formato grupo-número (Exemplo: grupo-1);
-- Subir o trabalho na branch com um README.md:
-  - documentar detalhes sobre como a avaliação foi desenvolvida;
-  - relatar dificuldades conhecidas;
-  - descrever como utilizar o sistema;
-- 🔨 Disponibilizar o código fonte desenvolvido (observar estruturas de pastas);
-- O prazo de entrega é até às 09h do dia 16/09/2024 no repositório do github (https://github.com/Compass-pb-aws-2024-JULHO-A/sprints-4-5-pb-aws-julho-a).
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/AntonioRian">
+        <img src="https://avatars.githubusercontent.com/u/114035144?v=4" width="100px;" alt=""/><br>
+        <sub>
+          <b>Antonio Rian de Jesus Felix</b>
+        </sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/gabalencar">
+        <img src="https://avatars.githubusercontent.com/u/102690558?v=4" width="100px;" alt=""/><br>
+        <sub>
+          <b>Gabriel Alencar Gomes</b>
+        </sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/KalylSemi">
+        <img src="https://avatars.githubusercontent.com/u/157990287?v=4" width="100px;" alt=""/><br>
+        <sub>
+          <b>Kalyl Semi Diab</b>
+        </sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/Leititcia">
+        <img src="https://avatars.githubusercontent.com/u/130941056?v=4" width="100px;" alt=""/><br>
+        <sub>
+          <b>Leticia Pereira do Vale</b>
+        </sub>
+      </a>
+    </td>
+  </tr>
+</table>
